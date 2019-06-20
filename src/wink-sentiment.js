@@ -125,12 +125,18 @@ var sentiment = function ( phrase ) {
       sentiWords = 0;
   // Number of words encountered.
   var words = 0;
-  // Helpers: for loop indexes, token, temp ss, and word count.
+  // Helpers: for loop indexes, token, temp ss and word count.
   var k, kmax, t, tkn, tss, wc;
+  // negation flag
+  var precedingNegation = false;
 
   for ( k = 0, kmax = tokenizedPhrase.length; k < kmax; k += 1 ) {
     tkn = tokenizedPhrase[ k ];
     t = tkn.value;
+    // here is check for punctuation and reset the negation flag
+    if ( tokenizedPhrase[ k ].tag == 'punctuation' ) {
+      precedingNegation = false;
+    }
     switch ( tkn.tag ) {
       case 'emoji':
         tss = emojis[ t ];
@@ -174,10 +180,20 @@ var sentiment = function ( phrase ) {
           // sentiWords += 1;
         }
         // Check for negation — upto two words ahead; even a bigram AFINN config may be negated! Convert to Lower Case for case insensitive comparison.
-        if ( ( k > 0 && negations[ tokenizedPhrase[ k - 1 ].value.toLowerCase() ] ) || ( k > 1 && negations[ tokenizedPhrase[ k - 2 ].value.toLowerCase() ] ) ) {
+        /* if ( ( k > 0 && negations[ tokenizedPhrase[ k - 1 ].value.toLowerCase() ] ) || ( k > 1 && negations[ tokenizedPhrase[ k - 2 ].value.toLowerCase() ] ) ) {
           tss = -tss;
           tkn.negation = true;
+        } */
+        // flip the the score if negation flag is true
+        if ( precedingNegation == true ) {
+                  tss = -tss;
+                  tkn.negation = true;
         }
+        // change code check negation. mark negation flag true when negation word in sentence
+        if ( negations[ tokenizedPhrase[ k ].value.toLowerCase() ] ) {
+            precedingNegation = true;
+        }
+
         ss += tss;
         // Increment `k` by 1 if a bigram config was found earlier i.e. `wc` was set to **2**.
         k += ( wc - 1 );

@@ -64,7 +64,7 @@ describe( 'sentiment', function () {
          { value: 'Not', tag: 'word' },
          { value: 'a', tag: 'word', negation: true },
          { value: 'good', tag: 'word', score: -3, negation: true },
-         { value: 'product', tag: 'word' }
+         { value: 'product', tag: 'word', negation: true }
        ]
      } );
   } );
@@ -273,8 +273,8 @@ describe( 'sentiment', function () {
         { value: 'so', tag: 'word', negation: true },
         { value: 'well', tag: 'word', grouped: 1, negation: true, score: -3 },
         { value: 'done', tag: 'word' },
-        { value: 'my', tag: 'word' },
-        { value: 'boy', tag: 'word' },
+        { value: 'my', tag: 'word', negation: true },
+        { value: 'boy', tag: 'word', negation: true },
         { value: '!', tag: 'punctuation' },
         { value: 'I', tag: 'word' },
         { value: 'am', tag: 'word' },
@@ -373,19 +373,19 @@ describe( 'validate with amazon product review data from UCI', function () {
   var precision = tp / ( tp + fp );
   var recall = tp / ( tp + fn );
   // Reduce verbosity of test output by moving `it` outside the `forEach`.
-  it( 'it should achieve an accuracy of 77%', function () {
-    expect( Math.round( ( tp + tn ) * 100 / ( tp + tn + fp + fn ) ) ).to.be.at.least( 77 );
+  it( 'it should achieve an accuracy of 78%', function () {
+    expect( Math.round( ( tp + tn ) * 100 / ( tp + tn + fp + fn ) ) ).to.be.at.least( 78 );
   } );
 
   it( 'it should achieve an recall of 98%', function () {
     expect( Math.round( recall * 100 ) ).to.equal( 98 );
   } );
 
-  it( 'it should achieve an precision of 69%', function () {
-    expect( Math.round( precision * 100 ) ).to.equal( 69 );
+  it( 'it should achieve an precision of 70%', function () {
+    expect( Math.round( precision * 100 ) ).to.equal( 70 );
   } );
 
-  it( 'it should achieve an f-measure of 0.81', function () {
-    expect( +( 2 * precision * recall / ( precision + recall ) ).toFixed( 2 ) ).to.equal( 0.81 );
+  it( 'it should achieve an f-measure of 0.82', function () {
+    expect( +( 2 * precision * recall / ( precision + recall ) ).toFixed( 2 ) ).to.equal( 0.82 );
   } );
 } );
